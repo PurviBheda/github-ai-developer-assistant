@@ -1,11 +1,19 @@
-from dotenv import load_dotenv
-import os
+from openai import OpenAI
+from src.config import LLM_API_KEY
 
-load_dotenv()
+client = OpenAI(
+    api_key=LLM_API_KEY,
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+)
 
-github_token = os.getenv("GITHUB_TOKEN")
+response = client.chat.completions.create(
+    model="gemini-3.8-flash",
+    messages=[
+        {
+            "role": "user",
+            "content": "Explain what MCP is in one sentence."
+        }
+    ]
+)
 
-if github_token:
-    print("GitHub token loaded successfully!")
-else:
-    print("GitHub token not found!")
+print(response.choices[0].message.content)
